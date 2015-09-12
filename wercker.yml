@@ -14,13 +14,14 @@ build:
     - script:
         name: copy output
         code: |
+          mkdir -p "$WERCKER_OUTPUT_DIR"/omniEvents
           cp -rv /root/rpmbuild/RPMS/x86_64/* "$WERCKER_OUTPUT_DIR"/omniEvents
 
 deploy:
     box: python
     steps:
     - s3sync:
-        source-dir: omniEvents
+        source-dir: .
         bucket-url: $AWS_BUCKET_URL
         key-id: $AWS_ACCESS_KEY_ID
         key-secret: $AWS_SECRET_ACCESS_KEY
