@@ -22,4 +22,6 @@ tools/eventl
 tools/rmeventc
 tools/rmeventall
 *.pyc
-
+_builds
+_projects
+_steps

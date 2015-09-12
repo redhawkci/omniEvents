@@ -1,0 +1,27 @@
+box: redhawkci/rpmbuild:el6
+
+build:
+  steps:
+    - script:
+        name: install dependencies
+        code: yum-builddep -y omniEvents.spec
+
+    - script:
+        name: build packages
+        code: |
+          tar --transform 's,^\.,omniEvents-2.7.0,' -czvf /root/rpmbuild/SOURCES/omniEvents-2.7.0.tar.gz .
+          rpmbuild -bb omniEvents.spec
+
+    - script:
+        name: copy output
+        code: |
+          mkdir $WERCKER_OUTPUT_DIR/omniEvents
+          cp -r /root/rpmbuild/RPMs/* $WERCKER_OUTPUT_DIR/omniEvents
+
+deploy:
+    steps:
+    - s3sync:
+        source_dir: $WERCKER_OUTPUT_DIR/omniEvents
+        bucket-url: $AWS_BUCKET_URL
+        key-id: $AWS_ACCESS_KEY_ID
+        key-secret: $AWS_SECRET_ACCESS_KEY
