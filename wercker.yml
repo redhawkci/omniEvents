@@ -16,7 +16,7 @@ build:
         name: copy output
         code: |
           mkdir $WERCKER_OUTPUT_DIR/omniEvents
-          cp -r /root/rpmbuild/RPMs/* $WERCKER_OUTPUT_DIR/omniEvents
+          cp -r /root/rpmbuild/RPMS/x86_64 $WERCKER_OUTPUT_DIR/omniEvents
 
 deploy:
     steps:
