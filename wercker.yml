@@ -1,6 +1,5 @@
-box: redhawkci/rpmbuild:el6
-
 build:
+  box: redhawkci/rpmbuild:el6
   steps:
     - script:
         name: install dependencies
@@ -15,13 +14,13 @@ build:
     - script:
         name: copy output
         code: |
-          mkdir $WERCKER_OUTPUT_DIR/omniEvents
-          cp /root/rpmbuild/RPMS/x86_64/* $WERCKER_OUTPUT_DIR/omniEvents
+          cp -rv /root/rpmbuild/RPMS/x86_64/* "$WERCKER_OUTPUT_DIR"
 
 deploy:
+    box: python
     steps:
     - s3sync:
-        source_dir: ../output/omniEvents
+        source-dir: .
         bucket-url: $AWS_BUCKET_URL
         key-id: $AWS_ACCESS_KEY_ID
         key-secret: $AWS_SECRET_ACCESS_KEY
