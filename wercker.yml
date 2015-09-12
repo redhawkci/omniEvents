@@ -21,7 +21,7 @@ build:
 deploy:
     steps:
     - s3sync:
-        source_dir: $WERCKER_OUTPUT_DIR/omniEvents
+        source_dir: ../output/omniEvents
         bucket-url: $AWS_BUCKET_URL
         key-id: $AWS_ACCESS_KEY_ID
         key-secret: $AWS_SECRET_ACCESS_KEY
