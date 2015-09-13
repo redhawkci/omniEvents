@@ -2,6 +2,10 @@ build:
   box: redhawkci/rpmbuild:el6
   steps:
     - script:
+        name: update installed packages
+        code: yum update -y
+
+    - script:
         name: install dependencies
         code: yum-builddep -y omniEvents.spec
 
@@ -14,8 +18,16 @@ build:
     - script:
         name: copy output
         code: |
-          mkdir -p "$WERCKER_OUTPUT_DIR"/omniEvents
-          cp -rv /root/rpmbuild/RPMS/x86_64/* "$WERCKER_OUTPUT_DIR"/omniEvents
+          cp -rv /root/rpmbuild/RPMS/x86_64/* "$WERCKER_OUTPUT_DIR"
+          #Temporarily, grab the omniORBpy packages from REDHAWK 1.10.2
+          #yum repo so we can deploy a redhawk-deps yum repo
+          yum install -y createrepo
+          cd $WERCKER_OUTPUT_DIR
+          wget http://yum.axiosengineering.com/redhawk/1.10.2/el6/x86_64/omniORBpy-debuginfo-3.6-3.el6.x86_64.rpm
+          wget http://yum.axiosengineering.com/redhawk/1.10.2/el6/x86_64/omniORBpy-devel-3.6-3.el6.noarch.rpm
+          wget http://yum.axiosengineering.com/redhawk/1.10.2/el6/x86_64/omniORBpy-libs-3.6-3.el6.x86_64.rpm
+          wget http://yum.axiosengineering.com/redhawk/1.10.2/el6/x86_64/python-omniORB-3.6-3.el6.noarch.rpm
+          createrepo .
 
 deploy:
     box: python
